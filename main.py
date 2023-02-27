@@ -1,8 +1,16 @@
 from fastapi import FastAPI,UploadFile,File
+from fastapi import Depends, FastAPI
+from fastapi.security import OAuth2PasswordBearer
 from db import *
 import uvicorn
 import s3
 app=FastAPI(title="APi Developer With S3 Buket")
+###################################################################
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+@app.get("/items/")
+async def read_items(token: str = Depends(oauth2_scheme)):
+    return {"token": token}
+#########################################################
 
 @app.get("/all/images", tags="Show All Images")
 async def show():
@@ -28,4 +36,3 @@ async def delet_one_file(name):
 
 if __name__=="__main__":
     uvicorn.run(app="main:app",port=5800, host="0.0.0.0", reload=True)
-    #dfdjfdj
